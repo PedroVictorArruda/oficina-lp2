@@ -1,12 +1,5 @@
 package persistencia;
 
-// ============================================================
-//  RESPONSÁVEL: Integrante 3
-//  TAREFA: implementar o método carregar() abaixo.
-//  Atenção: Veiculo é abstrato — salvar e carregar usa o campo
-//  "tipo" (CARRO, MOTO ou CAMINHAO) para distinguir subclasses.
-// ============================================================
-
 import com.google.gson.*;
 import model.*;
 import service.OficinaService;
@@ -51,7 +44,6 @@ public class PersistenciaVeiculo extends PersistenciaJson {
         salvarArquivo(ARQUIVO, array);
     }
 
-    // ----- CARREGAR (TODO: Integrante 3 deve implementar) -----
     public static List<Veiculo> carregar(OficinaService service) {
         List<Veiculo> lista = new ArrayList<>();
 

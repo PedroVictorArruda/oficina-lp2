@@ -1,9 +1,5 @@
 package persistencia;
 
-// ============================================================
-//  RESPONSÁVEL: Integrante 3
-//  TAREFA: implementar o método carregar() abaixo.
-// ============================================================
 
 import com.google.gson.*;
 import model.Peca;
@@ -15,7 +11,6 @@ public class PersistenciaPeca extends PersistenciaJson {
 
     private static final String ARQUIVO = "pecas.json";
 
-    // ----- SALVAR (já implementado) -----
     public static void salvar(List<Peca> pecas) {
         JsonArray array = new JsonArray();
         for (Peca p : pecas) {
@@ -30,7 +25,6 @@ public class PersistenciaPeca extends PersistenciaJson {
         salvarArquivo(ARQUIVO, array);
     }
 
-    // ----- CARREGAR (TODO: Integrante 3 deve implementar) -----
     public static List<Peca> carregar() {
         List<Peca> lista = new ArrayList<>();
 

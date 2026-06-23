@@ -1,0 +1,20 @@
+Atividade Unidade 03 - Sistema de Gestão de Oficina Mecânica
+Disciplina: Linguagem de Programação 2 (POO)
+
+========== INTEGRANTES ==========
+
+José Carlos Oliveira de Lima
+Matrícula: 20230055731
+
+Aramys Andreew Tavares de Paiva
+Matrícula: 20220075051
+
+Raul Furtado Costa
+Matrícula: 20240018179
+
+Pedro Victor Arruda Câmara Vilela Cid
+Matrícula: 20220043414
+
+========== REPOSITÓRIO ==========
+
+https://github.com/PedroVictorArruda/oficina-lp2

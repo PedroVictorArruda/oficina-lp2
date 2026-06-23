@@ -10,19 +10,16 @@ public class PersistenciaVeiculo extends PersistenciaJson {
 
     private static final String ARQUIVO = "veiculos.json";
 
-    // ----- SALVAR (já implementado) -----
     public static void salvar(List<Veiculo> veiculos) {
         JsonArray array = new JsonArray();
         for (Veiculo v : veiculos) {
             JsonObject obj = new JsonObject();
-            // campos comuns
             obj.addProperty("id",     v.getId());
             obj.addProperty("placa",  v.getPlaca());
             obj.addProperty("modelo", v.getModelo());
             obj.addProperty("ano",    v.getAno());
             obj.addProperty("donoId", v.getDono().getId());
 
-            // campos específicos de cada subtipo
             if (v instanceof Carro) {
                 Carro c = (Carro) v;
                 obj.addProperty("tipo",           "CARRO");
@@ -50,21 +47,36 @@ public class PersistenciaVeiculo extends PersistenciaJson {
         for (JsonElement elemento : carregarArray(ARQUIVO)) {
             JsonObject obj = elemento.getAsJsonObject();
 
-            // TODO: leia os campos comuns e o "tipo", depois crie a subclasse correta.
-            //
-            // Campos comuns: id, placa, modelo, ano, donoId
-            // Para recuperar o Cliente dono: service.buscarClientePorId(donoId)
-            //
-            // Exemplo de estrutura:
-            //   String tipo = obj.get("tipo").getAsString();
-            //   if (tipo.equals("CARRO")) {
-            //       int nrPortas = obj.get("nrPortas").getAsInt();
-            //       TipoCombustivel comb = TipoCombustivel.valueOf(obj.get("tipoCombustivel").getAsString());
-            //       lista.add(new Carro(id, placa, modelo, ano, dono, nrPortas, comb));
-            //   } else if (tipo.equals("MOTO")) { ... }
-            //     else { /* CAMINHAO */ ... }
-        }
+         public static List<Veiculo> carregar(OficinaService service) {
+    List<Veiculo> lista = new ArrayList<>();
+    for (JsonElement elemento : carregarArray(ARQUIVO)) {
+        JsonObject obj = elemento.getAsJsonObject();
 
-        return lista;
+        // Campos comuns
+        int id       = obj.get("id").getAsInt();
+        String placa  = obj.get("placa").getAsString();
+        String modelo = obj.get("modelo").getAsString();
+        int ano       = obj.get("ano").getAsInt();
+        int donoId    = obj.get("donoId").getAsInt();
+        Cliente dono  = service.buscarClientePorId(donoId);
+
+        String tipo = obj.get("tipo").getAsString();
+
+        if (tipo.equals("CARRO")) {
+            int nrPortas            = obj.get("nrPortas").getAsInt();
+            TipoCombustivel comb    = TipoCombustivel.valueOf(obj.get("tipoCombustivel").getAsString());
+            lista.add(new Carro(id, placa, modelo, ano, dono, nrPortas, comb));
+
+        } else if (tipo.equals("MOTO")) {
+            int cilindrada  = obj.get("cilindrada").getAsInt();
+            TipoMoto tipoMoto = TipoMoto.valueOf(obj.get("tipoMoto").getAsString());
+            lista.add(new Moto(id, placa, modelo, ano, dono, cilindrada, tipoMoto));
+
+        } else {
+            double capCarga = obj.get("capCarga").getAsDouble();
+            int nrEixos     = obj.get("nrEixos").getAsInt();
+            lista.add(new Caminhao(id, placa, modelo, ano, dono, capCarga, nrEixos));
+        }
     }
+    return lista;
 }

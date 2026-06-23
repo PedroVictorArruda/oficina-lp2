@@ -31,11 +31,15 @@ public class PersistenciaPeca extends PersistenciaJson {
         for (JsonElement elemento : carregarArray(ARQUIVO)) {
             JsonObject obj = elemento.getAsJsonObject();
 
-            // TODO: leia os campos e crie a Peca
-            // Campos: id, codigo, nome, preco, estoque
-            //
-            // Construtor:
-            //   new Peca(id, codigo, nome, new BigDecimal(preco), estoque)
+            int id = obj.get("id").getAsInt();
+            String codigo = obj.get("codigo").getAsString();
+            String nome = obj.get("nome").getAsString();
+            String preco = obj.get("preco").getAsString();
+            int estoque = obj.get("estoque").getAsInt();
+
+            Peca p = new Peca(id, codigo, nome, new BigDecimal(preco), estoque);
+
+            lista.add(p);
         }
 
         return lista;

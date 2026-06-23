@@ -1,10 +1,5 @@
 package persistencia;
 
-// ============================================================
-//  RESPONSÁVEL: Integrante 2
-//  TAREFA: implementar o método carregar() abaixo.
-// ============================================================
-
 import com.google.gson.*;
 import model.Especialidade;
 import model.Mecanico;
@@ -16,7 +11,6 @@ public class PersistenciaMecanico extends PersistenciaJson {
 
     private static final String ARQUIVO = "mecanicos.json";
 
-    // ----- SALVAR (já implementado) -----
     public static void salvar(List<Mecanico> mecanicos) {
         JsonArray array = new JsonArray();
         for (Mecanico m : mecanicos) {
@@ -32,21 +26,22 @@ public class PersistenciaMecanico extends PersistenciaJson {
         salvarArquivo(ARQUIVO, array);
     }
 
-    // ----- CARREGAR (TODO: Integrante 2 deve implementar) -----
     public static List<Mecanico> carregar() {
         List<Mecanico> lista = new ArrayList<>();
 
         for (JsonElement elemento : carregarArray(ARQUIVO)) {
             JsonObject obj = elemento.getAsJsonObject();
 
-            // TODO: leia os campos e crie o Mecanico
-            // Campos: id, nome, cpf, telefone, especialidade, salario
-            //
-            // Para o enum especialidade use:
-            //   Especialidade.valueOf(obj.get("especialidade").getAsString())
-            //
-            // Construtor:
-            //   new Mecanico(id, nome, cpf, telefone, especialidade, new BigDecimal(salario))
+            int id = obj.get("id").getAsInt();
+            String nome = obj.get("nome").getAsString();
+            String cpf = obj.get("cpf").getAsString();
+            String telefone = obj.get("telefone").getAsString();
+            Especialidade especialidade = Especialidade.valueOf(obj.get("especialidade").getAsString());
+            BigDecimal salario = new BigDecimal(obj.get("salario").getAsString());
+
+            Mecanico m = new Mecanico(id, nome, cpf, telefone, especialidade, new BigDecimal(salario));
+
+            lista.add(m);
         }
 
         return lista;

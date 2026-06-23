@@ -37,19 +37,20 @@ public class PersistenciaOrdem extends PersistenciaJson {
         for (JsonElement elemento : carregarArray(ARQUIVO)) {
             JsonObject obj = elemento.getAsJsonObject();
 
-            Cliente  cliente  = service.buscarClientePorId(obj.get("clienteId").getAsInt());
-            Veiculo  veiculo  = service.buscarVeiculoPorId(obj.get("veiculoId").getAsInt());
-            int mecId = obj.get("mecanicoId").getAsInt();
+            int id           = obj.get("id").getAsInt();
+            Cliente  cliente = service.buscarClientePorId(obj.get("clienteId").getAsInt());
+            Veiculo  veiculo = service.buscarVeiculoPorId(obj.get("veiculoId").getAsInt());
+            int mecId        = obj.get("mecanicoId").getAsInt();
             Mecanico mecanico = mecId != -1 ? service.buscarMecanicoPorId(mecId) : null;
             StatusOrdem status = StatusOrdem.valueOf(obj.get("status").getAsString());
             LocalDate data     = LocalDate.parse(obj.get("data").getAsString());
-            
+
             OrdemServico ordem = new OrdemServico(id, cliente, veiculo, mecanico, status, data);
-            
+
             for (JsonElement sEl : obj.get("servicoIds").getAsJsonArray()) {
                 ordem.adicionarServicoCarregado(service.buscarServicoPorId(sEl.getAsInt()));
             }
-            
+
             lista.add(ordem);
         }
 

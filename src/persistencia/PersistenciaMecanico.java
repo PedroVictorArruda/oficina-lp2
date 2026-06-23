@@ -39,7 +39,7 @@ public class PersistenciaMecanico extends PersistenciaJson {
             Especialidade especialidade = Especialidade.valueOf(obj.get("especialidade").getAsString());
             BigDecimal salario = new BigDecimal(obj.get("salario").getAsString());
 
-            Mecanico m = new Mecanico(id, nome, cpf, telefone, especialidade, new BigDecimal(salario));
+            Mecanico m = new Mecanico(id, nome, cpf, telefone, especialidade, salario);
 
             lista.add(m);
         }

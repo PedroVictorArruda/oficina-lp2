@@ -19,7 +19,6 @@ public class PersistenciaServico extends PersistenciaJson {
             obj.addProperty("descricao", s.getDescricao());
             obj.addProperty("precoBase", s.getPrecoBase().toPlainString());
 
-            // salva IDs das peças associadas ao serviço
             JsonArray pecaIds = new JsonArray();
             for (Peca p : s.getPecas()) pecaIds.add(p.getId());
             obj.add("pecaIds", pecaIds);
@@ -32,9 +31,9 @@ public class PersistenciaServico extends PersistenciaJson {
                 obj.addProperty("kmAtual",         sp.getKmAtual());
             } else if (s instanceof ServicoCorretivo) {
                 ServicoCorretivo sc = (ServicoCorretivo) s;
-                obj.addProperty("tipo",         "CORRETIVO");
-                obj.addProperty("nivelUrgencia", sc.getNivelUrgencia().name());
-                obj.addProperty("categoria",     sc.getCategoria().name());
+                obj.addProperty("tipo",          "CORRETIVO");
+                obj.addProperty("nivelUrgencia",  sc.getNivelUrgencia().name());
+                obj.addProperty("categoria",      sc.getCategoria().name());
                 if (sc.getPecaSubstituida() != null) {
                     obj.addProperty("pecaSubstituidaId", sc.getPecaSubstituida().getId());
                 }
@@ -50,17 +49,33 @@ public class PersistenciaServico extends PersistenciaJson {
         for (JsonElement elemento : carregarArray(ARQUIVO)) {
             JsonObject obj = elemento.getAsJsonObject();
 
-            ServicoPreventivo sp = new ServicoPreventivo(id, descricao, new BigDecimal(precoBase),
-                                   intervaloKm, ultimaRevisaoKm, kmAtual);
-            ServicoCorretivo sc = new ServicoCorretivo(id, descricao, new BigDecimal(precoBase),
-                                     NivelUrgencia.valueOf(...), Especialidade.valueOf(...));
-            if (obj.has("pecaSubstituidaId")) {
-                sc.setPecaSubstituida(service.buscarPecaPorId(obj.get("pecaSubstituidaId").getAsInt()));
+            int id           = obj.get("id").getAsInt();
+            String descricao = obj.get("descricao").getAsString();
+            BigDecimal preco = new BigDecimal(obj.get("precoBase").getAsString());
+            String tipo      = obj.get("tipo").getAsString();
+
+            Servico servico;
+
+            if (tipo.equals("PREVENTIVO")) {
+                int intervaloKm     = obj.get("intervaloKm").getAsInt();
+                int ultimaRevisaoKm = obj.get("ultimaRevisaoKm").getAsInt();
+                int kmAtual         = obj.get("kmAtual").getAsInt();
+                servico = new ServicoPreventivo(id, descricao, preco, intervaloKm, ultimaRevisaoKm, kmAtual);
+            } else {
+                NivelUrgencia urgencia   = NivelUrgencia.valueOf(obj.get("nivelUrgencia").getAsString());
+                Especialidade categoria  = Especialidade.valueOf(obj.get("categoria").getAsString());
+                ServicoCorretivo sc      = new ServicoCorretivo(id, descricao, preco, urgencia, categoria);
+                if (obj.has("pecaSubstituidaId")) {
+                    sc.setPecaSubstituida(service.buscarPecaPorId(obj.get("pecaSubstituidaId").getAsInt()));
+                }
+                servico = sc;
             }
-            
+
             for (JsonElement pEl : obj.get("pecaIds").getAsJsonArray()) {
-                sc.adicionarPeca(service.buscarPecaPorId(pEl.getAsInt()));
+                servico.adicionarPeca(service.buscarPecaPorId(pEl.getAsInt()));
             }
+
+            lista.add(servico);
         }
 
         return lista;
